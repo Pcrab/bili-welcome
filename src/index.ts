@@ -26,7 +26,6 @@ const handler: MsgHandler = {
             formData.append("csrf", csrf);
             formData.append("csrf_token", csrf);
             formData.append("rnd", "1684682694");
-            console.log(formData);
             fetch("https://api.live.bilibili.com/msg/send", {
                 method: "POST",
                 mode: "cors",
@@ -36,9 +35,9 @@ const handler: MsgHandler = {
                 body: formData,
             })
                 .then((res) => {
-                    res.text()
-                        .then((text) => {
-                            console.log(text);
+                    res.json()
+                        .then((json) => {
+                            console.log(json);
                         })
                         .catch((err) => {
                             console.log(err);
