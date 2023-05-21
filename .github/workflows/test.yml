@@ -1,0 +1,10 @@
+name: Install dependencies
+
+on: 
+  workflow_call:
+
+jobs:
+  test:
+    uses: ./.github/workflows/prepare.yml
+    with:
+      action: 'test'
