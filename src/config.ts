@@ -8,7 +8,7 @@ const { values } = parseArgs({
     options: {
         config: {
             type: "string",
-            alias: "c",
+            short: "c",
         },
         csrf: {
             type: "string",
@@ -21,7 +21,7 @@ const { values } = parseArgs({
         },
         debug: {
             type: "boolean",
-            alias: "d",
+            short: "d",
         },
     },
 });
