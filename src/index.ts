@@ -5,10 +5,10 @@ import { csrf, sess, roomId } from "./config.js";
 const handler: MsgHandler = {
     onUserAction: (msg) => {
         try {
-            if (msg.type !== "ENTRY_EFFECT") {
+            if (msg.type !== "ENTRY_EFFECT" && msg.body.action !== "enter") {
                 return;
             }
-            consola.info(`[${new Date().toJSON()}]: 用户「${msg.body.user.uname}」进入直播间`);
+            consola.log(`用户「${msg.body.user.uname}」进入直播间`);
             const formData = new FormData();
             formData.append("bubble", "0");
             formData.append("msg", `欢迎 ${msg.body.user.uname} 进入直播间`);
@@ -52,7 +52,5 @@ const handler: MsgHandler = {
     },
 };
 
-const instance = startListen(roomId, handler);
+startListen(roomId, handler);
 consola.info(`Listening to room ${roomId}...`);
-
-instance.close();
