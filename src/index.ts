@@ -8,7 +8,7 @@ const handler: MsgHandler = {
             if (msg.type !== "ENTRY_EFFECT") {
                 return;
             }
-            console.log(msg.body.user.uname);
+            consola.info(`[${new Date().toJSON()}]: 用户「${msg.body.user.uname}」进入直播间`);
             const formData = new FormData();
             formData.append("bubble", "0");
             formData.append("msg", `欢迎 ${msg.body.user.uname} 进入直播间`);
@@ -36,11 +36,11 @@ const handler: MsgHandler = {
                             console.log(json);
                         })
                         .catch((err) => {
-                            console.log(err);
+                            consola.error(err);
                         });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    consola.error(err);
                 });
         } catch {
             return;
