@@ -1,11 +1,7 @@
+import { consola } from "consola";
 import { startListen, type MsgHandler } from "blive-message-listener";
+import { csrf, sess, roomId } from "./config.js";
 
-// Cookie bili_jct
-const csrf = "";
-// Cookie SESSDATA
-const SESSDATA = "";
-
-const roomId = 26887365;
 const handler: MsgHandler = {
     onUserAction: (msg) => {
         try {
@@ -30,7 +26,7 @@ const handler: MsgHandler = {
                 method: "POST",
                 mode: "cors",
                 headers: {
-                    cookie: `bili_jct=${csrf}; SESSDATA=${SESSDATA}`,
+                    cookie: `bili_jct=${csrf}; SESSDATA=${sess}`,
                 },
                 body: formData,
             })
@@ -53,5 +49,6 @@ const handler: MsgHandler = {
 };
 
 const instance = startListen(roomId, handler);
+consola.info(`Listening to room ${roomId}...`);
 
 instance.close();

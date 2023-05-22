@@ -14,7 +14,8 @@
         }
     },
     "dependencies": {
-        "blive-message-listener": "^0.4.4"
+        "blive-message-listener": "^0.4.4",
+        "consola": "^3.1.0"
     },
     "description": "Send welcome message to new bilibili live room viewers",
     "devDependencies": {
