@@ -1,66 +1,63 @@
 {
-    "name": "bili-welcome",
-    "version": "0.0.1",
+    "author": {
+        "email": "pcrab@pcrab.xyz",
+        "name": "Pcrab",
+        "url": "https://github.com/Pcrab"
+    },
+    "bin": {
+        "bwel": "bin/bwel.js"
+    },
+    "bugs": "https://github.com/Pcrab/bili-welcome/issues",
+    "config": {
+        "commitizen": {
+            "path": "node_modules/cz-conventional-changelog"
+        }
+    },
+    "dependencies": {
+        "blive-message-listener": "^0.4.4"
+    },
     "description": "Send welcome message to new bilibili live room viewers",
-    "license": "MIT",
-    "type": "module",
+    "devDependencies": {
+        "@commitlint/cli": "^17.6.3",
+        "@commitlint/config-conventional": "^17.6.3",
+        "@pcrab/eslint-config": "^0.6.0",
+        "@pcrab/prettier-config": "^0.2.0",
+        "@types/node": "^20.2.3",
+        "@typescript-eslint/eslint-plugin": "^5.59.6",
+        "@typescript-eslint/parser": "^5.59.6",
+        "commitizen": "^4.3.0",
+        "cz-conventional-changelog": "^3.3.0",
+        "eslint": "^8.41.0",
+        "husky": "^8.0.3",
+        "prettier": "^2.8.8",
+        "typescript": "^5.0.4",
+        "unbuild": "^1.2.1"
+    },
+    "exports": "./dist/index.mjs",
+    "files": [
+        "bin",
+        "dist"
+    ],
+    "homepage": "https://github.com/Pcrab/bili-welcome",
     "keywords": [
         "bilibili",
         "danmu",
         "welcome"
     ],
-    "homepage": "https://github.com/Pcrab/bili-welcome",
-    "bugs": "https://github.com/Pcrab/bili-welcome/issues",
-    "repository": "github:Pcrab/bili-welcome",
-    "author": {
-        "name": "Pcrab",
-        "email": "pcrab@pcrab.xyz",
-        "url": "https://github.com/Pcrab"
-    },
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.mjs"
-        }
-    },
+    "license": "MIT",
     "main": "./dist/index.mjs",
-    "module": "./dist/index.mjs",
-    "types": "./dist/index.d.ts",
-    "typesVersions": {
-        "*": {
-            "*": [
-                "./dist",
-                "./dist/index.d.ts"
-            ]
-        }
-    },
-    "files": [
-        "dist"
-    ],
+    "name": "bili-welcome",
+    "prettier": "@pcrab/prettier-config",
+    "repository": "github:Pcrab/bili-welcome",
     "scripts": {
-        "prepare": "husky install",
         "build": "unbuild",
-        "start": "node dist/index.mjs",
         "check": "tsc --noEmit",
-        "dev": "unbuild --stub",
-        "lint:fix": "eslint src --fix",
-        "lint": "eslint src"
+        "commit": "git-cz",
+        "lint": "eslint \"src/**/*.{ts, tsx}\"",
+        "prepare": "husky install",
+        "prepublishOnly": "pnpm build",
+        "start": "node dist/index.mjs"
     },
-    "devDependencies": {
-        "@types/node": "^20.2.1",
-        "@typescript-eslint/eslint-plugin": "^5.59.6",
-        "@typescript-eslint/parser": "^5.59.6",
-        "eslint": "^8.41.0",
-        "eslint-config-prettier": "^8.8.0",
-        "eslint-plugin-import": "^2.27.5",
-        "eslint-plugin-prettier": "^4.2.1",
-        "husky": "^8.0.3",
-        "prettier": "^2.8.8",
-        "ts-node": "^10.9.1",
-        "typescript": "^5.0.4",
-        "unbuild": "^1.2.1"
-    },
-    "dependencies": {
-        "blive-message-listener": "^0.4.4"
-    }
+    "type": "module",
+    "version": "0.0.1"
 }

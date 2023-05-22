@@ -1,21 +1,8 @@
 {
     "env": {
-        "es2022": true,
-        "browser": true
+        "node": true,
+        "browser": true,
+        "es6": true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:prettier/recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "project": [
-            "./tsconfig.json"
-        ]
-    },
-    "plugins": [
-        "@typescript-eslint"
-    ]
+    "extends": ["@pcrab/eslint-config"]
 }
