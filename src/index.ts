@@ -12,7 +12,6 @@ const handler: MsgHandler = {
             const formData = new FormData();
             formData.append("bubble", "0");
             formData.append("msg", `欢迎 ${msg.body.user.uname} 进入直播间`);
-            // formData.append("msg", `试一下弹幕`);
             formData.append("color", "5566168");
             formData.append("mode", "1");
             formData.append("room_type", "0");
