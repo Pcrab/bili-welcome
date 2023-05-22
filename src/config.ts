@@ -4,8 +4,6 @@ import { parseArgs } from "util";
 import { exit } from "process";
 import path from "path";
 
-consola.info("开始读取配置文件与命令行参数...");
-
 const { values } = parseArgs({
     options: {
         config: {
@@ -21,8 +19,18 @@ const { values } = parseArgs({
         roomId: {
             type: "string",
         },
+        debug: {
+            type: "boolean",
+            alias: "d",
+        },
     },
 });
+
+if (values.debug) {
+    consola.level = 4;
+}
+
+consola.debug("开始读取配置文件与命令行参数...");
 
 let csrf = "";
 let sess = "";
@@ -74,6 +82,9 @@ if (existsSync(configPath)) {
     }
 }
 
+consola.debug(`配置文件读取完毕`);
+consola.debug(`csrf: ${csrf || "未指定"}, sess: ${sess || "未指定"}, roomId: ${roomId || "未指定"}`);
+
 if (values.csrf) {
     csrf = values.csrf;
 }
@@ -92,5 +103,7 @@ if (!csrf || !sess || !roomId) {
     consola.error(`未指定 csrf 或 sess 或 roomId`);
     exit(1);
 }
+
+consola.debug(`最终配置: csrf: ${csrf}, sess: ${sess}, roomId: ${roomId}`);
 
 export { csrf, sess, roomId };

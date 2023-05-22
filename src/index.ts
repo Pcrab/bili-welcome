@@ -3,6 +3,9 @@ import { startListen, type MsgHandler } from "blive-message-listener";
 import { csrf, sess, roomId } from "./config.js";
 
 const handler: MsgHandler = {
+    onError: (err) => {
+        consola.error(err);
+    },
     onUserAction: (msg) => {
         try {
             if (msg.type !== "ENTRY_EFFECT" && msg.body.action !== "enter") {
@@ -35,7 +38,7 @@ const handler: MsgHandler = {
                             if (json.code !== 0) {
                                 consola.error(json);
                             } else {
-                                consola.success(`[${new Date().toJSON()}]: 消息发送成功`);
+                                consola.debug(`[${new Date().toJSON()}]: 消息发送成功`);
                             }
                         })
                         .catch((err) => {
