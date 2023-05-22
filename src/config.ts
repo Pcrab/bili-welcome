@@ -4,7 +4,7 @@ import { parseArgs } from "util";
 import { exit } from "process";
 import path from "path";
 
-consola.info("Parsing config file and command line arguments...");
+consola.info("开始读取配置文件与命令行参数...");
 
 const { values } = parseArgs({
     options: {
@@ -33,13 +33,13 @@ const defaultConfigPath = path.join(process.cwd(), "config.txt");
 let configPath = values.config;
 if (configPath) {
     if (!existsSync(configPath)) {
-        consola.warn(`Config file not found: ${configPath}`);
-        consola.warn(`Trying to use default config path: ./config.txt`);
+        consola.warn(`找不到指定的配置文件: ${configPath}`);
+        consola.warn(`尝试使用默认配置文件地址: ./config.txt`);
         configPath = defaultConfigPath;
     }
 } else {
-    consola.debug(`Config file not specified`);
-    consola.debug(`Trying to use default config path: ./config.txt`);
+    consola.debug(`未指定配置文件`);
+    consola.debug(`尝试使用默认配置文件地址: ./config.txt`);
     configPath = defaultConfigPath;
 }
 if (existsSync(configPath)) {
@@ -51,7 +51,7 @@ if (existsSync(configPath)) {
     for (const line of config) {
         const [key, value] = line.split("=");
         if (!key || !value) {
-            consola.error(`Invalid config line: ${line}`);
+            consola.error(`配置文件格式错误: ${line}`);
             exit(1);
         }
         switch (key) {
@@ -63,7 +63,7 @@ if (existsSync(configPath)) {
                 break;
             case "roomId":
                 if (isNaN(Number(value))) {
-                    consola.error(`Invalid roomId: ${value}`);
+                    consola.error(`roomId 必须为数字: ${value}`);
                     exit(1);
                 }
                 roomId = Number(value);
@@ -82,14 +82,14 @@ if (values.sess) {
 }
 if (values.roomId) {
     if (isNaN(Number(values.roomId))) {
-        consola.error(`Invalid roomId: ${values.roomId}`);
+        consola.error(`--roomId 指定房间号必须为数字: ${values.roomId}`);
         exit(1);
     }
     roomId = Number(values.roomId);
 }
 
 if (!csrf || !sess || !roomId) {
-    consola.error(`Invalid config`);
+    consola.error(`未指定 csrf 或 sess 或 roomId`);
     exit(1);
 }
 

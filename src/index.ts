@@ -52,4 +52,4 @@ const handler: MsgHandler = {
 };
 
 startListen(roomId, handler);
-consola.info(`Listening to room ${roomId}...`);
+consola.info(`开始监听直播间 ${roomId}...`);
