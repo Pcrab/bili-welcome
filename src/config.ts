@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "fs";
 import { consola } from "consola";
 import { parseArgs } from "util";
 import { exit } from "process";
+import path from "path";
 
 consola.info("Parsing config file and command line arguments...");
 
@@ -27,20 +28,26 @@ let csrf = "";
 let sess = "";
 let roomId = 0;
 
+const defaultConfigPath = path.join(process.cwd(), "config.txt");
+
 let configPath = values.config;
 if (configPath) {
     if (!existsSync(configPath)) {
         consola.warn(`Config file not found: ${configPath}`);
         consola.warn(`Trying to use default config path: ./config.txt`);
-        configPath = "./config.txt";
+        configPath = defaultConfigPath;
     }
 } else {
     consola.debug(`Config file not specified`);
     consola.debug(`Trying to use default config path: ./config.txt`);
-    configPath = "./config.txt";
+    configPath = defaultConfigPath;
 }
 if (existsSync(configPath)) {
-    const config = readFileSync(configPath, "utf-8").split(/\r?\n/);
+    const config = readFileSync(configPath, "utf-8")
+        .split(/\r?\n/)
+        .filter((line) => {
+            return line && !line.startsWith("#");
+        });
     for (const line of config) {
         const [key, value] = line.split("=");
         if (!key || !value) {
