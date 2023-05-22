@@ -11,6 +11,7 @@ const handler: MsgHandler = {
             if (msg.type !== "ENTRY_EFFECT" && msg.body.action !== "enter") {
                 return;
             }
+            consola.debug(`ID: ${msg.id}`);
             consola.log(`用户「${msg.body.user.uname}」进入直播间`);
             const formData = new FormData();
             formData.append("bubble", "0");
@@ -38,7 +39,7 @@ const handler: MsgHandler = {
                             if (json.code !== 0) {
                                 consola.error(json);
                             } else {
-                                consola.debug(`[${new Date().toJSON()}]: 消息发送成功`);
+                                consola.debug(`ID ${msg.id} 回复成功`);
                             }
                         })
                         .catch((err) => {
