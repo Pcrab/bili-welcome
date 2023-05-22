@@ -32,8 +32,12 @@ const handler: MsgHandler = {
             })
                 .then((res) => {
                     res.json()
-                        .then((json) => {
-                            console.log(json);
+                        .then((json: { code: number }) => {
+                            if (json.code !== 0) {
+                                consola.error(json);
+                            } else {
+                                consola.success(`[${new Date().toJSON()}]: 消息发送成功`);
+                            }
                         })
                         .catch((err) => {
                             consola.error(err);
