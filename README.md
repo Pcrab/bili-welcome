@@ -8,7 +8,13 @@ npm install -g bili-welcome
 
 ## 配置
 
-可以通过命令行或者配置文件来配置
+可以通过命令行或者配置文件来配置。首先需要获取到 `csrf` 和 `sess`，可以通过浏览器的开发者工具来获取。
+
+打开开发工具后，进入 `Application`，左侧选择 `Storage` 里的 `Cookies`，找到 `bili_jct` 和 `SESSDATA`，将其值填入配置文件或命令行参数中。
+
+![cookie](doc/cookie.png)
+
+`bili_jct` 对应 `csrf`，`SESSDATA` 对应 `sess`。
 
 ### 配置文件
 
