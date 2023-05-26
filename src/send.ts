@@ -1,14 +1,13 @@
-import { csrf, sess, roomId } from "./config.js";
+import { csrf, sess, roomId, response } from "./config.js";
 import { consola } from "consola";
 
-const send = (username: string, id = ""): void => {
+const send = (message: string, id = ""): void => {
+    if (!response) {
+        return;
+    }
     const formData = new FormData();
     formData.append("bubble", "0");
-    let uname = username;
-    if (uname.length > 11) {
-        uname = `${uname.slice(0, 8)}...`;
-    }
-    formData.append("msg", `欢迎 ${uname} 进入直播间`);
+    formData.append("msg", message);
     formData.append("color", "5566168");
     formData.append("mode", "1");
     formData.append("room_type", "0");
