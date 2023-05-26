@@ -6,6 +6,7 @@ export default defineBuildConfig({
     outDir: "dist",
     rollup: {
         esbuild: {
+            target: "esnext",
             minify: true,
         },
     },

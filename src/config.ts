@@ -1,109 +1,143 @@
-import { existsSync, readFileSync } from "fs";
+import { existsSync, mkdirSync } from "fs";
 import { consola } from "consola";
-import { parseArgs } from "util";
-import { exit } from "process";
 import path from "path";
+import { program } from "commander";
+import { loginWithQrcode } from "./login.js";
+import { writeFile, readFile } from "./utils.js";
 
-const { values } = parseArgs({
-    options: {
-        config: {
-            type: "string",
-            short: "c",
-        },
-        csrf: {
-            type: "string",
-        },
-        sess: {
-            type: "string",
-        },
-        roomId: {
-            type: "string",
-        },
-        debug: {
-            type: "boolean",
-            short: "d",
-        },
-    },
-});
+consola.info("开始解析参数和配置...");
 
-if (values.debug) {
+program
+    .option("-c, --config [path]", "配置文件路径")
+    .option("-d, --debug", "开启调试模式")
+    .option("-R, --no-response", "关闭自动回复")
+    .option("--sess [SESSDATA]", "配置 SESSDATA")
+    .option("--csrf [bili_jct]", "配置 bili_jct")
+    .option("--roomId [roomId]", "配置 roomId");
+
+program.parse();
+
+interface Options {
+    config?: string;
+    debug?: boolean;
+    response: boolean;
+    sess?: string;
+    csrf?: string;
+    roomId?: string;
+}
+const opts: Options = program.opts();
+
+interface ConfigOptions {
+    sess?: string;
+    csrf?: string;
+    roomId?: number;
+}
+
+if (opts.debug) {
     consola.level = 4;
+    consola.debug("Debug 模式已开启");
 }
+const defaultConfig = {} as const;
 
-consola.debug("开始读取配置文件与命令行参数...");
+// base config, make sure it exists
+const baseConfigPath =
+    process.platform === "win32"
+        ? path.join(process.env.LOCALAPPDATA ?? "", "bili-welcome")
+        : process.env.XDG_CONFIG_HOME
+        ? path.join(process.env.XDG_CONFIG_HOME, "bili-welcome")
+        : path.join(process.env.HOME ?? "", ".config", "bili-welcome");
+consola.debug(`全局配置文件夹路径 ${baseConfigPath}`);
+if (!existsSync(baseConfigPath)) {
+    consola.debug("全局配置文件夹不存在");
+    consola.debug(`创建全局配置文件文件夹 ${baseConfigPath}`);
+    mkdirSync(baseConfigPath, { recursive: true });
+}
+const baseConfigFile = path.join(baseConfigPath, "config.json");
+consola.debug(`全局配置文件路径: ${baseConfigFile}`);
+if (!existsSync(baseConfigFile)) {
+    consola.debug("全局配置文件不存在");
+    consola.debug(`使用空配置创建全局配置文件 ${baseConfigFile}`);
+    writeFile(baseConfigFile, JSON.stringify(defaultConfig, null, 4));
+}
+const baseConfig = readFile(baseConfigFile) as ConfigOptions;
+consola.debug("全局配置文件内容：");
+consola.debug(baseConfig);
 
-let csrf = "";
-let sess = "";
-let roomId = 0;
-
-const defaultConfigPath = path.join(process.cwd(), "config.txt");
-
-let configPath = values.config;
-if (configPath) {
-    if (!existsSync(configPath)) {
-        consola.warn(`找不到指定的配置文件: ${configPath}`);
-        consola.warn(`尝试使用默认配置文件地址: ./config.txt`);
-        configPath = defaultConfigPath;
+// command specific config file
+let cmdConfig: ConfigOptions = {};
+if (opts.config) {
+    consola.debug(`命令行指定配置文件: ${opts.config}`);
+    const configFile = path.isAbsolute(opts.config) ? opts.config : path.join(process.cwd(), opts.config);
+    consola.debug(`查找位于 ${configFile} 的配置文件`);
+    if (!existsSync(configFile)) {
+        consola.error(`无法找到配置文件 ${configFile}`);
+        process.exit(1);
     }
+    cmdConfig = readFile(configFile) as ConfigOptions;
 } else {
-    consola.debug(`未指定配置文件`);
-    consola.debug(`尝试使用默认配置文件地址: ./config.txt`);
-    configPath = defaultConfigPath;
+    if (existsSync(path.join(process.cwd(), "config.json"))) {
+        consola.debug("当前目录下发现配置文件，将会使用该配置");
+        cmdConfig = readFile(path.join(process.cwd(), "config.json")) as ConfigOptions;
+    }
 }
-if (existsSync(configPath)) {
-    const config = readFileSync(configPath, "utf-8")
-        .split(/\r?\n/)
-        .filter((line) => {
-            return line && !line.startsWith("#");
-        });
-    for (const line of config) {
-        const [key, value] = line.split("=");
-        if (!key || !value) {
-            consola.error(`配置文件格式错误: ${line}`);
-            exit(1);
-        }
-        switch (key) {
-            case "csrf":
-                csrf = value;
-                break;
-            case "sess":
-                sess = value;
-                break;
-            case "roomId":
-                if (isNaN(Number(value))) {
-                    consola.error(`roomId 必须为数字: ${value}`);
-                    exit(1);
-                }
-                roomId = Number(value);
-                break;
-            default:
-                break;
-        }
+consola.debug("指定配置文件内容:");
+consola.debug(cmdConfig);
+
+const finalConfig = {
+    ...baseConfig,
+    ...cmdConfig,
+};
+consola.debug("配置文件合并后内容:");
+consola.debug(finalConfig);
+
+// override config with command line options
+if (opts.csrf) {
+    consola.debug(`命令行指定 csrf: ${opts.csrf}`);
+    finalConfig.csrf = opts.csrf;
+}
+if (opts.sess) {
+    consola.debug(`命令行指定 sess: ${opts.sess}`);
+    finalConfig.sess = opts.sess;
+}
+if (opts.roomId) {
+    consola.debug(`命令行指定 roomId: ${opts.roomId}`);
+    finalConfig.roomId = parseInt(opts.roomId);
+}
+
+// if response is enabled, but final config doesn't have sess and csrf, try login
+if (!finalConfig.sess || !finalConfig.csrf) {
+    if (opts.response) {
+        consola.info("自动回复已启用，但 csrf 与 sess 未指定。尝试使用二维码登录");
+        consola.info("请使用手机 app 扫描二维码登录");
+        const result = await loginWithQrcode();
+        finalConfig.sess = result.sess;
+        finalConfig.csrf = result.csrf;
+    } else {
+        consola.info("自动回复已关闭，跳过登录");
     }
 }
 
-consola.debug(`配置文件读取完毕`);
-consola.debug(`csrf: ${csrf || "未指定"}, sess: ${sess || "未指定"}, roomId: ${roomId || "未指定"}`);
-
-if (values.csrf) {
-    csrf = values.csrf;
-}
-if (values.sess) {
-    sess = values.sess;
-}
-if (values.roomId) {
-    if (isNaN(Number(values.roomId))) {
-        consola.error(`--roomId 指定房间号必须为数字: ${values.roomId}`);
-        exit(1);
-    }
-    roomId = Number(values.roomId);
+// if base config file doesn't have sess and csrf, but final config has, write to base config file
+if (finalConfig.sess && finalConfig.csrf && (!baseConfig.sess || !baseConfig.csrf)) {
+    consola.debug("将 sess 与 csrf 写入全局配置文件");
+    writeFile(
+        baseConfigFile,
+        JSON.stringify({ ...baseConfig, sess: finalConfig.sess, csrf: finalConfig.csrf }, null, 4),
+    );
 }
 
-if (!csrf || !sess || !roomId) {
-    consola.error(`未指定 csrf 或 sess 或 roomId`);
-    exit(1);
+// verify roomId
+consola.debug(`验证 roomId: ${finalConfig.roomId ?? ""}`);
+if (!finalConfig.roomId || !Number.isInteger(finalConfig.roomId)) {
+    consola.error("roomId 必须为整数");
+    process.exit(1);
 }
 
-consola.debug(`最终配置: csrf: ${csrf}, sess: ${sess}, roomId: ${roomId}`);
+consola.info("配置与参数解析完成");
 
-export { csrf, sess, roomId };
+// export config
+const sess = finalConfig.sess;
+const csrf = finalConfig.csrf;
+const roomId = finalConfig.roomId;
+const response = opts.response;
+export { sess, csrf, roomId, response };
