@@ -57,9 +57,7 @@ bwel
 
 在 `Windows` 系统中，全局配置文件位于 `%LOCALAPPDATA%\bili-welcome\config.json` 文件，`macOS` 与 `Linux` 会读取 `~/.config/bili-welcome/config.json` 文件。如果不存在则会创建并写入空配置。
 
-默认读取当前目录下的 `config.json` 文件，如果不存在则使用命令行参数。
-
-也可以通过 `--config <path>` 或 `-c <path>` 来指定配置文件路径。
+如果命令行通过 `--config <path>` 或 `-c <path>` 指定了配置文件路径，将会在读取全局配置后读取指定的文件。
 
 具体格式为：
 
