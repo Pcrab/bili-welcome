@@ -72,9 +72,9 @@ type Config = {
 
 ```json
 {
-    "csrf" = "1234",
-    "sess" = "5678",
-    "roomId" = 4321
+    "csrf": "1234",
+    "sess": "5678",
+    "roomId": 4321
 }
 ```
 
