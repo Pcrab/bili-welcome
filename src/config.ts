@@ -105,9 +105,9 @@ if (opts.roomId) {
 }
 
 if (opts.response) {
-    consola.debug("自动回复已禁用");
-} else {
     consola.debug("自动回复已启用");
+} else {
+    consola.debug("自动回复已禁用");
 }
 
 // if response is enabled, but final config doesn't have sess and csrf, try login
