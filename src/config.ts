@@ -35,9 +35,9 @@ interface ConfigOptions {
     response?:
         | boolean
         | {
-              fans: boolean;
-              follow: boolean;
-              enter: boolean;
+              fans?: boolean;
+              follow?: boolean;
+              enter?: boolean;
           };
 }
 
@@ -113,26 +113,31 @@ if (opts.roomId) {
 }
 
 const response = opts.response && finalConfig.response;
+// default to enable true
+const responseEnter = typeof response === "boolean" ? response : response.enter ?? true;
+const responseFans = typeof response === "boolean" ? response : response.fans ?? true;
+const responseFollow = typeof response === "boolean" ? response : response.follow ?? true;
+const boolResponse = responseEnter || responseFans || responseFollow;
 
-if (response === false) {
+if (!boolResponse) {
     consola.debug("自动回复已禁用");
-} else if (response === true || (response.enter && response.fans && response.follow)) {
+} else if (responseEnter && responseFans && responseFollow) {
     consola.debug("自动回复已启用");
 } else {
-    if (response.fans) {
+    if (responseEnter) {
+        consola.debug("自动回复已启用: 进入直播间");
+    }
+    if (responseFans) {
         consola.debug("自动回复已启用: 新粉丝团成员");
     }
-    if (response.follow) {
+    if (responseFollow) {
         consola.debug("自动回复已启用: 新关注");
-    }
-    if (response.enter) {
-        consola.debug("自动回复已启用: 进入直播间");
     }
 }
 
 // if response is enabled, but final config doesn't have sess and csrf, try login
 if (!finalConfig.sess || !finalConfig.csrf) {
-    if (opts.response) {
+    if (boolResponse) {
         consola.info("自动回复已启用，但 csrf 与 sess 未指定。尝试使用二维码登录");
         consola.info("请使用手机 app 扫描二维码登录");
         const result = await loginWithQrcode();
@@ -165,7 +170,4 @@ consola.info("配置与参数解析完成");
 const sess = finalConfig.sess;
 const csrf = finalConfig.csrf;
 const roomId = finalConfig.roomId;
-const responseEnter = typeof response === "boolean" ? response : response.enter;
-const responseFans = typeof response === "boolean" ? response : response.fans;
-const responseFollow = typeof response === "boolean" ? response : response.follow;
-export { sess, csrf, roomId, response, responseEnter, responseFans, responseFollow };
+export { sess, csrf, roomId, boolResponse as response, responseEnter, responseFans, responseFollow };
