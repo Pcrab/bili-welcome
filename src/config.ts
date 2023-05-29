@@ -4,6 +4,7 @@ import path from "path";
 import { program } from "commander";
 import { loginWithQrcode } from "./login.js";
 import { writeFile, readFile } from "./utils.js";
+import defaultConfig from "../default.config.json";
 
 consola.info("开始解析参数和配置...");
 
@@ -31,13 +32,19 @@ interface ConfigOptions {
     sess?: string;
     csrf?: string;
     roomId?: number;
+    response?:
+        | boolean
+        | {
+              fans: boolean;
+              follow: boolean;
+              enter: boolean;
+          };
 }
 
 if (opts.debug) {
     consola.level = 4;
     consola.debug("Debug 模式已开启");
 }
-const defaultConfig = {} as const;
 
 // base config, make sure it exists
 const baseConfigPath =
@@ -84,6 +91,7 @@ consola.debug("指定配置文件内容:");
 consola.debug(cmdConfig);
 
 const finalConfig = {
+    ...defaultConfig,
     ...baseConfig,
     ...cmdConfig,
 };
@@ -104,10 +112,22 @@ if (opts.roomId) {
     finalConfig.roomId = parseInt(opts.roomId);
 }
 
-if (opts.response) {
+const response = opts.response && finalConfig.response;
+
+if (response === false) {
+    consola.debug("自动回复已禁用");
+} else if (response === true || (response.enter && response.fans && response.follow)) {
     consola.debug("自动回复已启用");
 } else {
-    consola.debug("自动回复已禁用");
+    if (response.fans) {
+        consola.debug("自动回复已启用: 新粉丝团成员");
+    }
+    if (response.follow) {
+        consola.debug("自动回复已启用: 新关注");
+    }
+    if (response.enter) {
+        consola.debug("自动回复已启用: 进入直播间");
+    }
 }
 
 // if response is enabled, but final config doesn't have sess and csrf, try login
@@ -145,5 +165,7 @@ consola.info("配置与参数解析完成");
 const sess = finalConfig.sess;
 const csrf = finalConfig.csrf;
 const roomId = finalConfig.roomId;
-const response = opts.response;
-export { sess, csrf, roomId, response };
+const responseEnter = typeof response === "boolean" ? response : response.enter;
+const responseFans = typeof response === "boolean" ? response : response.fans;
+const responseFollow = typeof response === "boolean" ? response : response.follow;
+export { sess, csrf, roomId, response, responseEnter, responseFans, responseFollow };

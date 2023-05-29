@@ -61,8 +61,8 @@ const send = async (node: LinkedListNode<Message>): Promise<void> => {
     formData.append("jumpfrom", "82001");
     formData.append("fontsize", "25");
     formData.append("roomid", roomId.toString());
-    formData.append("csrf", csrf ?? "");
-    formData.append("csrf_token", csrf ?? "");
+    formData.append("csrf", csrf);
+    formData.append("csrf_token", csrf);
     formData.append("rnd", "1684682694");
     try {
         const result = (await (
@@ -70,7 +70,7 @@ const send = async (node: LinkedListNode<Message>): Promise<void> => {
                 method: "POST",
                 mode: "cors",
                 headers: {
-                    cookie: `bili_jct=${csrf ?? ""}; SESSDATA=${sess ?? ""}`,
+                    cookie: `bili_jct=${csrf}; SESSDATA=${sess}`,
                 },
                 body: formData,
             })
