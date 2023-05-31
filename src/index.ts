@@ -14,12 +14,12 @@ const handler: MsgHandler = {
             if (msg.type === "ENTRY_EFFECT" || msg.body.action === "enter") {
                 consola.log(`用户「${msg.body.user.uname}」进入直播间`);
                 if (responseEnter) {
-                    sendMsg(buildMessage("欢迎%s进入直播间～", msg.body.user.uname), msg.id);
+                    sendMsg(buildMessage("欢迎 %s 进入直播间～", msg.body.user.uname), msg.id);
                 }
             } else if (msg.body.action === "follow") {
                 consola.log(`用户「${msg.body.user.uname}」关注了直播间`);
                 if (responseFollow) {
-                    sendMsg(buildMessage("感谢%s的关注喵～", msg.body.user.uname), msg.id);
+                    sendMsg(buildMessage("感谢 %s 的关注喵～", msg.body.user.uname), msg.id);
                 }
             }
         } catch {
@@ -31,7 +31,7 @@ const handler: MsgHandler = {
             if (msg.body.gift_name === "粉丝团灯牌") {
                 consola.log(`用户「${msg.body.user.uname}」加入了粉丝团「${medal_name}」`);
                 if (responseFans) {
-                    const message = buildMessage(`感谢%s加入${medal_name}～`, msg.body.user.uname);
+                    const message = buildMessage(`感谢 %s 加入${medal_name}～`, msg.body.user.uname);
                     sendMsg(message, msg.id);
                 }
             }
