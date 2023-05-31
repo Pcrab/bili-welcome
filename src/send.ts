@@ -1,4 +1,5 @@
-import { csrf, sess, roomId, response } from "./config.js";
+import { buildMessage } from "./utils.js";
+import { csrf, sess, roomId, response, blockBot } from "./config.js";
 import { consola } from "consola";
 
 interface LinkedListNode<T> {
@@ -104,14 +105,21 @@ if (response) {
     }, SEND_GAP);
 }
 
-const sendMsg = (message: string, id = ""): void => {
+const sendMsg = (message: string, uname: string, id = ""): void => {
     if (!response) {
         consola.debug(`已禁用自动发送弹幕`);
         return;
     }
+    if (blockBot) {
+        const botReg = /(\d\d-\d\d-\d\d\d.*)|(bili_[0-9]{5,})/;
+        if (botReg.exec(uname)) {
+            consola.debug(`已阻止回复机器人: ${uname}`);
+            return;
+        }
+    }
     insertLast({
         value: {
-            message,
+            message: buildMessage(message, uname),
             id,
             try: 0,
         },

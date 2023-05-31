@@ -12,6 +12,7 @@ program
     .option("-c, --config [path]", "配置文件路径")
     .option("-d, --debug", "开启调试模式")
     .option("-R, --no-response", "关闭自动回复")
+    .option("-B, --no-blockBot", "关闭屏蔽机器人")
     .option("--sess [SESSDATA]", "配置 SESSDATA")
     .option("--csrf [bili_jct]", "配置 bili_jct")
     .option("--roomId [roomId]", "配置 roomId");
@@ -21,6 +22,7 @@ program.parse();
 interface Options {
     config?: string;
     debug?: boolean;
+    blockBot: boolean;
     response: boolean;
     sess?: string;
     csrf?: string;
@@ -28,10 +30,13 @@ interface Options {
 }
 const opts: Options = program.opts();
 
+console.log(opts);
+
 interface ConfigOptions {
     sess?: string;
     csrf?: string;
     roomId?: number;
+    blockBot?: boolean;
     response?:
         | boolean
         | {
@@ -135,6 +140,10 @@ if (!boolResponse) {
     }
 }
 
+if (opts.blockBot || finalConfig.blockBot) {
+    consola.debug("屏蔽机器人已启用");
+}
+
 // if response is enabled, but final config doesn't have sess and csrf, try login
 if (!finalConfig.sess || !finalConfig.csrf) {
     if (boolResponse) {
@@ -170,4 +179,5 @@ consola.info("配置与参数解析完成");
 const sess = finalConfig.sess;
 const csrf = finalConfig.csrf;
 const roomId = finalConfig.roomId;
-export { sess, csrf, roomId, boolResponse as response, responseEnter, responseFans, responseFollow };
+const blockBot = opts.blockBot || finalConfig.blockBot;
+export { sess, csrf, roomId, boolResponse as response, responseEnter, responseFans, responseFollow, blockBot };

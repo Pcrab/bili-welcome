@@ -24,6 +24,7 @@ bwel
 | --- |:-: | --- | --- |
 | --config | -c | 配置文件路径 | 默认为 `./config.json` |
 | --debug | -d | 开启调试模式 | |
+| --no-blockBot | -B | 关闭屏蔽机器人用户 | 默认启用屏蔽机器人用户 |
 | --no-response | -R | 关闭自动回复 | 默认启用自动回复 |
 | --csrf | | cookie 中的 `bili_jct` 用作 `csrf` | |
 | --sess | | cookie 中的 `SESSDATA` 用作 `sess` | |
