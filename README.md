@@ -48,16 +48,18 @@ bwel -c "./config/config.json" -d -R --csrf 1234 --sess 5678 --roomId 4321
 
 ```typescript
 interface ConfigOptions {
-    sess: string;
-    csrf: string;
-    roomId: number;
+    sess: string; // SESSDATA
+    csrf: string; // bili_jct
+    roomId: number; // 长直播间号
+    sendGap: number; // 发送消息的间隔，单位为毫秒
+    maxRetry: number; // 最大重试次数
     // 指定为 true 或 false 时将会完全打开或关闭自动回复
     response:
         | boolean
         | {
               // 感谢投喂灯牌加入粉丝团的用户
               fans: boolean;
-              // 感谢点击关注的用户
+              // 感谢点击关注的用户，收到该消息原理未知，因此感谢不稳定
               follow: boolean;
               // 欢迎进入直播间的用户
               enter: boolean;
@@ -82,3 +84,8 @@ interface ConfigOptions {
 ![cookie](doc/cookie.png)
 
 `bili_jct` 对应 `csrf`，`SESSDATA` 对应 `sess`。
+
+### 已知问题
+
+1. 舰长或榜一二三等有进场特效的用户进入直播间时，大概率会收到两次入场消息，因此会欢迎两次。
+2. 启用感谢关注的用户时，由于只监听 `INTERACT_WORD` 事件，而用户关注直播间触发该事件的原理未知，因此感谢关注不稳定。
