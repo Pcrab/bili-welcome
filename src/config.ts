@@ -37,6 +37,8 @@ interface ConfigOptions {
     csrf?: string;
     roomId?: number;
     blockBot?: boolean;
+    sendGap: number;
+    maxRetry: number;
     response?:
         | boolean
         | {
@@ -76,7 +78,7 @@ consola.debug("全局配置文件内容：");
 consola.debug(baseConfig);
 
 // command specific config file
-let cmdConfig: ConfigOptions = {};
+let cmdConfig: ConfigOptions = {} as ConfigOptions;
 if (opts.config) {
     consola.debug(`命令行指定配置文件: ${opts.config}`);
     const configFile = path.isAbsolute(opts.config) ? opts.config : path.join(process.cwd(), opts.config);
@@ -144,6 +146,12 @@ if (opts.blockBot || finalConfig.blockBot) {
     consola.debug("屏蔽机器人已启用");
 }
 
+const maxRetry = finalConfig.maxRetry;
+const sendGap = finalConfig.sendGap;
+
+consola.debug(`最大重试次数: ${maxRetry}次`);
+consola.debug(`发送间隔: ${sendGap}ms`);
+
 // if response is enabled, but final config doesn't have sess and csrf, try login
 if (!finalConfig.sess || !finalConfig.csrf) {
     if (boolResponse) {
@@ -180,4 +188,15 @@ const sess = finalConfig.sess;
 const csrf = finalConfig.csrf;
 const roomId = finalConfig.roomId;
 const blockBot = opts.blockBot || finalConfig.blockBot;
-export { sess, csrf, roomId, boolResponse as response, responseEnter, responseFans, responseFollow, blockBot };
+export {
+    sess,
+    csrf,
+    roomId,
+    boolResponse as response,
+    responseEnter,
+    responseFans,
+    responseFollow,
+    blockBot,
+    maxRetry,
+    sendGap,
+};

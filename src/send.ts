@@ -1,5 +1,5 @@
 import { buildMessage } from "./utils.js";
-import { csrf, sess, roomId, response, blockBot } from "./config.js";
+import { csrf, sess, roomId, response, blockBot, maxRetry, sendGap } from "./config.js";
 import { consola } from "consola";
 
 interface LinkedListNode<T> {
@@ -7,8 +7,8 @@ interface LinkedListNode<T> {
     next: LinkedListNode<T> | null;
 }
 
-const MAX_RETRY = 3;
-const SEND_GAP = 3000;
+const MAX_RETRY = maxRetry;
+const SEND_GAP = sendGap;
 
 interface Message {
     message: string;

@@ -1,5 +1,7 @@
 {
     "sess": "",
     "csrf": "",
+    "maxRetry": 3,
+    "sendGap": 2000,
     "response": true
 }
