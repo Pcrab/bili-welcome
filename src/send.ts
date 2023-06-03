@@ -120,9 +120,14 @@ const sendMsg = (message: string, uname: string, id = ""): void => {
             return;
         }
     }
+    const msg = buildMessage(message, uname);
+    if (msg.length > config.maxLength) {
+        consola.debug(`已阻止发送过长的消息: ${msg}`);
+        return;
+    }
     insertLast({
         value: {
-            message: buildMessage(message, uname),
+            message: msg,
             id,
             try: 0,
         },

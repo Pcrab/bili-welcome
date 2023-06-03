@@ -29,6 +29,8 @@ const logConfig = (config: FinalOptions): void => {
 
     consola.debug(`最大重试次数: ${config.maxRetry}次`);
     consola.debug(`发送间隔: ${config.sendGap}ms`);
+
+    consola.debug(`最长消息长度: ${config.maxLength}个字符`);
 };
 
 export default logConfig;

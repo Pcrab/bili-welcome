@@ -44,6 +44,7 @@ const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOpt
         csrf,
         blockBot,
         giftMergeTime: mergedConfig.giftMergeTime,
+        maxLength: mergedConfig.maxLength,
         maxRetry,
         sendGap,
         roomId,

@@ -1,5 +1,8 @@
 import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "fs";
 import path from "path";
+import config from "./config/index.js";
+
+const { maxLength } = config;
 
 const configPath =
     process.platform === "win32"
@@ -44,7 +47,7 @@ const readFile = (path: string): unknown => {
 };
 
 const buildMessage = (base: string, username: string): string => {
-    const baseLength = 22 - base.length;
+    const baseLength = maxLength + 2 - base.length;
     if (username.length > baseLength) {
         return base.replace("%s", username.slice(0, baseLength - 1) + "…");
     }

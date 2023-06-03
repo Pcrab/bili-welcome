@@ -10,5 +10,6 @@
         "follow": true,
         "gift": true
     },
+    "maxLength": 20,
     "giftMergeTime": 3000
 }
