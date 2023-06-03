@@ -28,9 +28,10 @@ const handler: MsgHandler = {
     },
     onGift: (msg) => {
         try {
-            consola.log(`用户「${msg.body.user.uname}」赠送了 ${msg.body.amount} 个 ${msg.body.gift_name}`);
             if (msg.body.gift_name === "粉丝团灯牌") {
-                consola.log(`用户「${msg.body.user.uname}」加入了粉丝团「${medal_name}」`);
+                consola.log(
+                    `用户「${msg.body.user.uname}」赠送了 ${msg.body.amount} 个 粉丝团灯牌并加入了粉丝团「${medal_name}」`,
+                );
                 if (config.responseFans) {
                     handleGift(
                         msg.id,
@@ -39,6 +40,18 @@ const handler: MsgHandler = {
                         msg.body.amount,
                         msg.body.gift_name,
                         `感谢 %s 加入${medal_name}～`,
+                    );
+                }
+            } else {
+                consola.log(`用户「${msg.body.user.uname}」赠送了 ${msg.body.amount} 个 ${msg.body.gift_name}`);
+                if (config.responseGift) {
+                    handleGift(
+                        msg.id,
+                        msg.body.user.uid,
+                        msg.body.user.uname,
+                        msg.body.amount,
+                        msg.body.gift_name,
+                        "感谢 %s 的%c个%g～",
                     );
                 }
             }

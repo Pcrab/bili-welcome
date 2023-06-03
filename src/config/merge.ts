@@ -17,9 +17,10 @@ const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOpt
     mergedConfig.roomId = parseInt(opts.roomId ?? "", 10) || mergedConfig.roomId;
 
     const response = opts.response && mergedConfig.response;
+    const responseEnter = typeof response === "boolean" ? response : response.enter;
     const responseFans = typeof response === "boolean" ? response : response.fans;
     const responseFollow = typeof response === "boolean" ? response : response.follow;
-    const responseEnter = typeof response === "boolean" ? response : response.enter;
+    const responseGift = typeof response === "boolean" ? response : response.gift;
 
     if (!mergedConfig.sess || !mergedConfig.csrf) {
         const result = await loginWithQrcode();
@@ -46,9 +47,10 @@ const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOpt
         maxRetry,
         sendGap,
         roomId,
+        responseEnter,
         responseFans,
         responseFollow,
-        responseEnter,
+        responseGift,
     };
 };
 

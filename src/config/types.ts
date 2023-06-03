@@ -5,9 +5,10 @@ type ConfigOptions = typeof defaultConfig & {
 };
 
 type FinalOptions = Omit<Required<ConfigOptions>, "response"> & {
+    responseEnter: boolean;
     responseFans: boolean;
     responseFollow: boolean;
-    responseEnter: boolean;
+    responseGift: boolean;
 };
 
 interface Options {

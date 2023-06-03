@@ -8,7 +8,7 @@ const logConfig = (config: FinalOptions): void => {
         consola.debug("屏蔽机器人已关闭");
     }
 
-    if (config.responseEnter || config.responseFans || config.responseFollow) {
+    if (config.responseEnter || config.responseFans || config.responseFollow || config.responseGift) {
         if (config.responseFans) {
             consola.debug("自动回复粉丝已开启");
         }
@@ -17,6 +17,9 @@ const logConfig = (config: FinalOptions): void => {
         }
         if (config.responseEnter) {
             consola.debug("自动回复进入直播间已开启");
+        }
+        if (config.responseGift) {
+            consola.debug("自动回复礼物已开启");
         }
     } else {
         consola.debug("自动回复已关闭");
