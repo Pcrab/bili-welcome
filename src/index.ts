@@ -3,6 +3,7 @@ import { startListen, type MsgHandler } from "blive-message-listener";
 import config from "./config/index.js";
 import { sendMsg } from "./send.js";
 import { medal_name } from "./room.js";
+import handleGift from "./gift.js";
 
 const handler: MsgHandler = {
     onError: (err) => {
@@ -27,10 +28,18 @@ const handler: MsgHandler = {
     },
     onGift: (msg) => {
         try {
+            consola.log(`用户「${msg.body.user.uname}」赠送了 ${msg.body.amount} 个 ${msg.body.gift_name}`);
             if (msg.body.gift_name === "粉丝团灯牌") {
                 consola.log(`用户「${msg.body.user.uname}」加入了粉丝团「${medal_name}」`);
                 if (config.responseFans) {
-                    sendMsg(`感谢 %s 加入${medal_name}～`, msg.body.user.uname, msg.id);
+                    handleGift(
+                        msg.id,
+                        msg.body.user.uid,
+                        msg.body.user.uname,
+                        msg.body.amount,
+                        msg.body.gift_name,
+                        `感谢 %s 加入${medal_name}～`,
+                    );
                 }
             }
         } catch {

@@ -8,5 +8,6 @@
         "enter": true,
         "fans": true,
         "follow": true
-    }
+    },
+    "giftMergeTime": 3000
 }

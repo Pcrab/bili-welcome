@@ -22,6 +22,8 @@ const logConfig = (config: FinalOptions): void => {
         consola.debug("自动回复已关闭");
     }
 
+    consola.debug(`合并礼物间隔: ${config.giftMergeTime}ms`);
+
     consola.debug(`最大重试次数: ${config.maxRetry}次`);
     consola.debug(`发送间隔: ${config.sendGap}ms`);
 };
