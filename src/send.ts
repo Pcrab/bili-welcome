@@ -1,8 +1,8 @@
-import { buildMessage } from "./utils.js";
+import { medal_name } from "./room.js";
 import config from "./config/index.js";
 import { consola } from "consola";
 
-const { csrf, sess, roomId, blockBot, maxRetry, sendGap } = config;
+const { csrf, sess, roomId, blockBot, maxRetry, sendGap, maxLength } = config;
 const response = config.responseEnter || config.responseFans || config.responseFollow;
 
 interface LinkedListNode<T> {
@@ -108,9 +108,17 @@ if (response) {
     }, SEND_GAP);
 }
 
+const buildMessage = (base: string, username: string): string => {
+    const replaced = base.replace("%m", medal_name);
+    const baseLength = maxLength + 2 - replaced.length;
+    if (username.length > baseLength) {
+        return replaced.replace("%s", username.slice(0, baseLength - 1) + "…");
+    }
+    return replaced.replace("%s", username);
+};
+
 const sendMsg = (message: string, uname: string, id = ""): void => {
-    if (!response) {
-        consola.debug(`已禁用自动发送弹幕`);
+    if (!message) {
         return;
     }
     if (blockBot) {

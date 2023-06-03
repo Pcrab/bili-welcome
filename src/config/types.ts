@@ -1,14 +1,25 @@
-import type defaultConfig from "../../default.config.json";
-
-type ConfigOptions = typeof defaultConfig & {
+interface ConfigOptions {
+    sess: string;
+    csrf: string;
+    blockBot: boolean;
+    maxRetry: number;
+    sendGap: number;
+    response: {
+        enter: boolean | string;
+        fans: boolean | string;
+        follow: boolean | string;
+        gift: boolean | string;
+    };
+    maxLength: number;
+    giftMergeTime: number;
     roomId: number;
-};
+}
 
 type FinalOptions = Omit<Required<ConfigOptions>, "response"> & {
-    responseEnter: boolean;
-    responseFans: boolean;
-    responseFollow: boolean;
-    responseGift: boolean;
+    responseEnter: string;
+    responseFans: string;
+    responseFollow: string;
+    responseGift: string;
 };
 
 interface Options {

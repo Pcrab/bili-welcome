@@ -10,16 +10,16 @@ const logConfig = (config: FinalOptions): void => {
 
     if (config.responseEnter || config.responseFans || config.responseFollow || config.responseGift) {
         if (config.responseFans) {
-            consola.debug("自动回复粉丝已开启");
+            consola.debug(`自动回复加入粉丝团已开启: ${config.responseFans}`);
         }
         if (config.responseFollow) {
-            consola.debug("自动回复关注已开启");
+            consola.debug(`自动回复关注已开启: ${config.responseFollow}`);
         }
         if (config.responseEnter) {
-            consola.debug("自动回复进入直播间已开启");
+            consola.debug(`自动回复进入直播间已开启: ${config.responseEnter}`);
         }
         if (config.responseGift) {
-            consola.debug("自动回复礼物已开启");
+            consola.debug(`自动回复礼物已开启: ${config.responseGift}`);
         }
     } else {
         consola.debug("自动回复已关闭");

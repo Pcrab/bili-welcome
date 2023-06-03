@@ -3,6 +3,27 @@ import type { ConfigOptions, FinalOptions } from "./types.js";
 import opts from "./opts.js";
 import { loginWithQrcode } from "./login.js";
 import { consola } from "consola";
+import { defaultEnterResponse, defaultFansResponse, defaultFollowResponse, defaultGiftResponse } from "./constants.js";
+
+const parseResponse = (
+    base: ConfigOptions["response"] | boolean,
+    key: keyof ConfigOptions["response"],
+    defaultResponse: string,
+): string => {
+    let response: boolean | string = false;
+    if (typeof base === "boolean") {
+        response = base;
+    } else {
+        response = base[key];
+    }
+    if (!response) {
+        return "";
+    }
+    if (response === true) {
+        return defaultResponse;
+    }
+    return response;
+};
 
 const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOptions | null): Promise<FinalOptions> => {
     const mergedConfig: ConfigOptions = {
@@ -17,10 +38,10 @@ const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOpt
     mergedConfig.roomId = parseInt(opts.roomId ?? "", 10) || mergedConfig.roomId;
 
     const response = opts.response && mergedConfig.response;
-    const responseEnter = typeof response === "boolean" ? response : response.enter;
-    const responseFans = typeof response === "boolean" ? response : response.fans;
-    const responseFollow = typeof response === "boolean" ? response : response.follow;
-    const responseGift = typeof response === "boolean" ? response : response.gift;
+    const responseEnter = parseResponse(response, "enter", defaultEnterResponse);
+    const responseFans = parseResponse(response, "fans", defaultFansResponse);
+    const responseFollow = parseResponse(response, "follow", defaultFollowResponse);
+    const responseGift = parseResponse(response, "gift", defaultGiftResponse);
 
     if (!mergedConfig.sess || !mergedConfig.csrf) {
         const result = await loginWithQrcode();
