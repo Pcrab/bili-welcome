@@ -1,7 +1,12 @@
 {
     "sess": "",
     "csrf": "",
+    "blockBot": true,
     "maxRetry": 3,
     "sendGap": 2000,
-    "response": true
+    "response": {
+        "enter": true,
+        "fans": true,
+        "follow": true
+    }
 }

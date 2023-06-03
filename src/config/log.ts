@@ -1,0 +1,29 @@
+import { consola } from "consola";
+import type { FinalOptions } from "./types.js";
+
+const logConfig = (config: FinalOptions): void => {
+    if (config.blockBot) {
+        consola.debug("屏蔽机器人已开启");
+    } else {
+        consola.debug("屏蔽机器人已关闭");
+    }
+
+    if (config.responseEnter || config.responseFans || config.responseFollow) {
+        if (config.responseFans) {
+            consola.debug("自动回复粉丝已开启");
+        }
+        if (config.responseFollow) {
+            consola.debug("自动回复关注已开启");
+        }
+        if (config.responseEnter) {
+            consola.debug("自动回复进入直播间已开启");
+        }
+    } else {
+        consola.debug("自动回复已关闭");
+    }
+
+    consola.debug(`最大重试次数: ${config.maxRetry}次`);
+    consola.debug(`发送间隔: ${config.sendGap}ms`);
+};
+
+export default logConfig;

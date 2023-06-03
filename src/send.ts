@@ -1,6 +1,9 @@
 import { buildMessage } from "./utils.js";
-import { csrf, sess, roomId, response, blockBot, maxRetry, sendGap } from "./config.js";
+import config from "./config/index.js";
 import { consola } from "consola";
+
+const { csrf, sess, roomId, blockBot, maxRetry, sendGap } = config;
+const response = config.responseEnter || config.responseFans || config.responseFollow;
 
 interface LinkedListNode<T> {
     value: T;

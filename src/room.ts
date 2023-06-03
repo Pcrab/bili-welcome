@@ -1,5 +1,5 @@
 import { consola } from "consola";
-import { roomId } from "./config.js";
+import config from "./config/index.js";
 
 interface RoomInfoResponse {
     code: 0 | 1;
@@ -10,7 +10,7 @@ interface RoomInfoResponse {
 }
 
 const roomInfo = (await (
-    await fetch(`https://api.live.bilibili.com/room/v1/Room/get_info?room_id=${roomId}`)
+    await fetch(`https://api.live.bilibili.com/room/v1/Room/get_info?room_id=${config.roomId}`)
 ).json()) as RoomInfoResponse;
 
 if (roomInfo.code === 1) {
