@@ -139,6 +139,19 @@ interface ConfigOptions {
 
 注意，由于有弹幕最长长度限制，用户名可能会被截取，因此 `%s` 只会替换出现的第一次。
 
+当前默认回复内容为:
+
+```json
+{
+    "response": {
+        "enter": "欢迎 %s 进入直播间～",
+        "fans": "感谢 %s 加入%m～",
+        "follow": "感谢 %s 的关注喵～",
+        "gift": "感谢 %s 的%c个%g～"
+    }
+}
+```
+
 ### giftMergeTime
 
 设置礼物合并等待时间，单位为毫秒。
