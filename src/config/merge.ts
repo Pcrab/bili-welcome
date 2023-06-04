@@ -6,20 +6,20 @@ import { consola } from "consola";
 import { defaultEnterResponse, defaultFansResponse, defaultFollowResponse, defaultGiftResponse } from "./constants.js";
 
 const parseResponse = (
-    base: ConfigOptions["response"] | boolean,
+    base: Partial<ConfigOptions["response"]> | boolean,
     key: keyof ConfigOptions["response"],
     defaultResponse: string,
 ): string => {
-    let response: boolean | string = false;
+    let response: boolean | string | undefined = false;
     if (typeof base === "boolean") {
         response = base;
     } else {
         response = base[key];
     }
-    if (!response) {
+    if (response === false) {
         return "";
     }
-    if (response === true) {
+    if (response === true || response === undefined) {
         return defaultResponse;
     }
     return response;
