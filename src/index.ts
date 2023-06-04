@@ -11,6 +11,9 @@ const handler: MsgHandler = {
     },
     onUserAction: (msg) => {
         try {
+            if (msg.type === "ENTRY_EFFECT") {
+                return;
+            }
             if (msg.body.action === "enter") {
                 consola.log(`用户「${msg.body.user.uname}」进入直播间`);
                 sendMsg(config.responseEnter, msg.body.user.uname, msg.id);
