@@ -1,3 +1,4 @@
+import merge from "ts-deepmerge";
 import defaultConfig from "../../default.config.json";
 import type { ConfigOptions, FinalOptions } from "./types.js";
 import opts from "./opts.js";
@@ -45,11 +46,13 @@ const parseBlockBot = (base: boolean, blockBot: boolean | string): RegExp | null
 };
 
 const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOptions | null): Promise<FinalOptions> => {
-    const mergedConfig: ConfigOptions = {
-        ...defaultConfig,
-        ...baseConfig,
-        ...specifiedConfig,
-    };
+    const mergedConfig = ((): ConfigOptions => {
+        if (specifiedConfig) {
+            return merge(defaultConfig, baseConfig, specifiedConfig);
+        } else {
+            return merge(defaultConfig, baseConfig);
+        }
+    })();
     // default to enable blockBot
     const blockBot = parseBlockBot(opts.blockBot, mergedConfig.blockBot);
     const maxRetry = mergedConfig.maxRetry;
