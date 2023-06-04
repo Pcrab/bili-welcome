@@ -3,7 +3,13 @@ import type { ConfigOptions, FinalOptions } from "./types.js";
 import opts from "./opts.js";
 import { loginWithQrcode } from "./login.js";
 import { consola } from "consola";
-import { defaultEnterResponse, defaultFansResponse, defaultFollowResponse, defaultGiftResponse } from "./constants.js";
+import {
+    defaultBlockBot,
+    defaultEnterResponse,
+    defaultFansResponse,
+    defaultFollowResponse,
+    defaultGiftResponse,
+} from "./constants.js";
 
 const parseResponse = (
     base: Partial<ConfigOptions["response"]> | boolean,
@@ -25,6 +31,19 @@ const parseResponse = (
     return response;
 };
 
+const parseBlockBot = (base: boolean, blockBot: boolean | string): RegExp | null => {
+    if (!base) {
+        return null;
+    }
+    if (typeof blockBot === "string") {
+        return new RegExp(blockBot, "i");
+    }
+    if (blockBot) {
+        return new RegExp(defaultBlockBot, "i");
+    }
+    return null;
+};
+
 const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOptions | null): Promise<FinalOptions> => {
     const mergedConfig: ConfigOptions = {
         ...defaultConfig,
@@ -32,7 +51,7 @@ const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOpt
         ...specifiedConfig,
     };
     // default to enable blockBot
-    const blockBot = (opts.blockBot && mergedConfig.blockBot) || true;
+    const blockBot = parseBlockBot(opts.blockBot, mergedConfig.blockBot);
     const maxRetry = mergedConfig.maxRetry;
     const sendGap = mergedConfig.sendGap;
     mergedConfig.roomId = parseInt(opts.roomId ?? "", 10) || mergedConfig.roomId;

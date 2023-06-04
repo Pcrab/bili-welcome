@@ -122,8 +122,7 @@ const sendMsg = (message: string, uname: string, id = ""): void => {
         return;
     }
     if (blockBot) {
-        const botReg = /(\d\d-\d\d-\d\d\d.*)|(bili_[0-9]{5,})/;
-        if (botReg.exec(uname)) {
+        if (blockBot.exec(uname)) {
             consola.debug(`已阻止回复机器人: ${uname}`);
             return;
         }

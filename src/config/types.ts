@@ -1,7 +1,7 @@
 interface ConfigOptions {
     sess: string;
     csrf: string;
-    blockBot: boolean;
+    blockBot: boolean | string;
     maxRetry: number;
     sendGap: number;
     response: {
@@ -14,7 +14,8 @@ interface ConfigOptions {
     roomId: number;
 }
 
-type FinalOptions = Omit<Required<ConfigOptions>, "response"> & {
+type FinalOptions = Omit<Required<ConfigOptions>, "blockBot" | "response"> & {
+    blockBot: RegExp | null;
     response: boolean;
     responseEnter: string;
     responseFans: string;
