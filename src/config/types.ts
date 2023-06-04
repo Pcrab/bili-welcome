@@ -10,12 +10,12 @@ interface ConfigOptions {
         follow: boolean | string;
         gift: boolean | string;
     };
-    maxLength: number;
     giftMergeTime: number;
     roomId: number;
 }
 
 type FinalOptions = Omit<Required<ConfigOptions>, "response"> & {
+    response: boolean;
     responseEnter: string;
     responseFans: string;
     responseFollow: string;

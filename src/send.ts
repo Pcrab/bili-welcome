@@ -1,9 +1,9 @@
 import { medal_name } from "./room.js";
 import config from "./config/index.js";
 import { consola } from "consola";
+import maxLength from "./maxLength.js";
 
-const { csrf, sess, roomId, blockBot, maxRetry, sendGap, maxLength } = config;
-const response = config.responseEnter || config.responseFans || config.responseFollow;
+const { csrf, sess, roomId, blockBot, maxRetry, sendGap, response } = config;
 
 interface LinkedListNode<T> {
     value: T;
@@ -129,7 +129,7 @@ const sendMsg = (message: string, uname: string, id = ""): void => {
         }
     }
     const msg = buildMessage(message, uname);
-    if (msg.length > config.maxLength) {
+    if (msg.length > maxLength) {
         consola.debug(`已阻止发送过长的消息: ${msg}`);
         return;
     }
