@@ -15,7 +15,7 @@ const map: Record<
 > = {};
 
 const parseMsg = (msg: string, count: number, giftName: string): string => {
-    return msg.replace("%c", count.toString()).replace("%g", giftName);
+    return msg.replaceAll("%c", count.toString()).replaceAll("%g", giftName);
 };
 
 const handleGift = (id: string, uid: number, uname: string, count: number, giftName: string, msg: string): void => {

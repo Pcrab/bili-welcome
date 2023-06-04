@@ -109,7 +109,7 @@ if (response) {
 }
 
 const buildMessage = (base: string, username: string): string => {
-    const replaced = base.replace("%m", medal_name);
+    const replaced = base.replaceAll("%m", medal_name);
     const baseLength = maxLength + 2 - replaced.length;
     if (username.length > baseLength) {
         return replaced.replace("%s", username.slice(0, baseLength - 1) + "…");
