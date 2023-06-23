@@ -49,6 +49,7 @@ interface ConfigOptions {
     blockBot: boolen | string; // 是否屏蔽机器人用户
     roomId: number; // 长直播间号
     sendGap: number; // 发送消息的间隔，单位为毫秒
+    autoWearMedal: boolean; // 是否自动佩戴粉丝牌
     maxRetry: number; // 最大重试次数
     // 指定为 true 或 false 时将会完全打开或关闭自动回复
     response:
@@ -100,6 +101,10 @@ interface ConfigOptions {
 设置回复消息发送的时间间隔，单位为毫秒。
 
 所有消息都会在队列中，按照指定的间隔一条条发送。
+
+### autoWearMedal
+
+设置是否自动佩戴粉丝牌，默认启用。如果用户拥有该主播的粉丝牌，且启用了回复功能，将会自动佩戴。
 
 ### maxRetry
 
