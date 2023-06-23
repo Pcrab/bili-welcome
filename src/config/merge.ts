@@ -55,8 +55,10 @@ const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOpt
     })();
     // default to enable blockBot
     const blockBot = parseBlockBot(opts.blockBot, mergedConfig.blockBot);
+    const giftMergeTime = mergedConfig.giftMergeTime;
     const maxRetry = mergedConfig.maxRetry;
     const sendGap = mergedConfig.sendGap;
+    const autoWearMedal = mergedConfig.autoWearMedal;
     mergedConfig.roomId = parseInt(opts.roomId ?? "", 10) || mergedConfig.roomId;
 
     const response = opts.response && mergedConfig.response;
@@ -86,9 +88,10 @@ const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOpt
         sess,
         csrf,
         blockBot,
-        giftMergeTime: mergedConfig.giftMergeTime,
+        giftMergeTime,
         maxRetry,
         sendGap,
+        autoWearMedal,
         roomId,
         response: (responseEnter || responseFans || responseFollow || responseGift) !== "",
         responseEnter,

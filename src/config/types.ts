@@ -4,6 +4,7 @@ interface ConfigOptions {
     blockBot: boolean | string;
     maxRetry: number;
     sendGap: number;
+    autoWearMedal: boolean;
     response: {
         enter: boolean | string;
         fans: boolean | string;

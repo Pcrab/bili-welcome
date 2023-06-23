@@ -4,6 +4,7 @@
     "blockBot": true,
     "maxRetry": 3,
     "sendGap": 2000,
+    "autoWearMedal": true,
     "response": {
         "enter": true,
         "fans": true,

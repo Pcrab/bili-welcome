@@ -8,6 +8,10 @@ const logConfig = (config: FinalOptions): void => {
         consola.debug("屏蔽机器人已关闭");
     }
 
+    if (config.autoWearMedal) {
+        consola.debug("自动佩戴粉丝牌已开启");
+    }
+
     if (config.responseEnter || config.responseFans || config.responseFollow || config.responseGift) {
         if (config.responseFans) {
             consola.debug(`自动回复加入粉丝团已开启: ${config.responseFans}`);
