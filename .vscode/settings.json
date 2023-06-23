@@ -8,11 +8,6 @@
         "**/Thumbs.db": true,
         "**/node_modules": false
     },
-    "cSpell.words": [
-        "bilibili",
-        "danmu",
-        "danmus",
-        "pblive",
-        "roomid"
-    ]
+    "cSpell.words": ["bilibili", "danmu", "danmus", "pblive", "roomid"],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }
