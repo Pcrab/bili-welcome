@@ -4,6 +4,9 @@ import config from "./config/index.js";
 import { sendMsg } from "./send.js";
 import { medal_name } from "./room.js";
 import handleGift from "./gift.js";
+import { updateMedal } from "./updateMedal.js";
+
+await updateMedal();
 
 const handler: MsgHandler = {
     onError: (err) => {
