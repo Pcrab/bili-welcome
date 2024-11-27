@@ -1,10 +1,12 @@
-import { fileExists, readFile } from "../utils.js";
-import path from "path";
-import type { ConfigOptions } from "./types.js";
+import path from "node:path";
 import { consola } from "consola";
+import { fileExists, readFile } from "../utils.js";
+import type { ConfigOptions } from "./types.js";
 
 const parsePath = (configPath: string): string => {
-    return path.isAbsolute(configPath) ? configPath : path.join(process.cwd(), configPath);
+    return path.isAbsolute(configPath)
+        ? configPath
+        : path.join(process.cwd(), configPath);
 };
 
 const parseConfig = (configPath: string): ConfigOptions | null => {

@@ -1,12 +1,12 @@
-import path from "path";
-import defaultConfig from "../../default.config.json";
+import path from "node:path";
 import { consola } from "consola";
-import parseConfig from "./parse.js";
+import defaultConfig from "../../default.config.json" with { type: "json" };
 import { configPath, writeFile } from "../utils.js";
-import opts from "./opts.js";
-import type { ConfigOptions } from "./types.js";
-import mergeConfig from "./merge.js";
 import logConfig from "./log.js";
+import mergeConfig from "./merge.js";
+import opts from "./opts.js";
+import parseConfig from "./parse.js";
+import type { ConfigOptions } from "./types.js";
 
 const baseConfigPath = path.join(configPath, "config.json");
 consola.debug(`全局配置路径 ${baseConfigPath}`);
@@ -14,7 +14,7 @@ consola.debug(`全局配置路径 ${baseConfigPath}`);
 let baseConfig = parseConfig(baseConfigPath);
 // create default config if not exists
 if (baseConfig === null) {
-    writeFile(path.join(baseConfigPath, "config.json"), JSON.stringify(defaultConfig, null, 4));
+    writeFile(baseConfigPath, JSON.stringify(defaultConfig, null, 4));
     baseConfig = {
         ...defaultConfig,
         roomId: 0,
@@ -29,10 +29,10 @@ if (opts.config) {
         consola.warn(`指定配置文件 ${opts.config} 不存在或读取错误`);
     }
 } else {
-    consola.debug(`未指定配置文件，尝试读取当前目录下的 config.json`);
+    consola.debug("未指定配置文件，尝试读取当前目录下的 config.json");
     specifiedConfig = parseConfig(path.join(process.cwd(), "config.json"));
     if (specifiedConfig === null) {
-        consola.debug(`读取当前目录下的 config.json 失败`);
+        consola.debug("读取当前目录下的 config.json 失败");
     }
 }
 

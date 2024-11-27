@@ -1,7 +1,7 @@
-import { medal_name } from "./room.js";
-import config from "./config/index.js";
 import { consola } from "consola";
+import config from "./config/index.js";
 import maxLength from "./maxLength.js";
+import { medal_name } from "./room.js";
 
 const { csrf, sess, roomId, blockBot, maxRetry, sendGap, response } = config;
 
@@ -27,10 +27,9 @@ const insertFirst = (node: LinkedListNode<Message>): void => {
         first = node;
         last = node;
         return;
-    } else {
-        node.next = first;
-        first = node;
     }
+    node.next = first;
+    first = node;
 };
 
 const insertLast = (node: LinkedListNode<Message>): void => {
@@ -38,10 +37,9 @@ const insertLast = (node: LinkedListNode<Message>): void => {
         first = node;
         last = node;
         return;
-    } else {
-        last.next = node;
-        last = node;
     }
+    last.next = node;
+    last = node;
 };
 
 const getFirst = (): LinkedListNode<Message> | null => {
@@ -83,18 +81,16 @@ const send = async (node: LinkedListNode<Message>): Promise<void> => {
             consola.error(`发送失败: ID: ${node.value.id}`);
             consola.error(result);
             throw new Error("发送失败");
-        } else {
-            consola.success(`发送成功: ID: ${node.value.id}`);
         }
+        consola.success(`发送成功: ID: ${node.value.id}`);
     } catch {
         node.value.try++;
         if (node.value.try > MAX_RETRY) {
             consola.error(`已尝试过 ${MAX_RETRY} 次，放弃发送`);
             return;
-        } else {
-            consola.warn(`准备重试第 ${node.value.try} 次`);
-            insertFirst(node);
         }
+        consola.warn(`准备重试第 ${node.value.try} 次`);
+        insertFirst(node);
     }
 };
 
@@ -112,7 +108,7 @@ const buildMessage = (base: string, username: string): string => {
     const replaced = base.replaceAll("%m", medal_name);
     const baseLength = maxLength + 2 - replaced.length;
     if (username.length > baseLength) {
-        return replaced.replace("%s", username.slice(0, baseLength - 1) + "…");
+        return replaced.replace("%s", `${username.slice(0, baseLength - 1)}…`);
     }
     return replaced.replace("%s", username);
 };

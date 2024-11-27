@@ -1,12 +1,19 @@
-import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "fs";
-import path from "path";
+import {
+    existsSync,
+    lstatSync,
+    mkdirSync,
+    readFileSync,
+    realpathSync,
+    writeFileSync,
+} from "node:fs";
+import path from "node:path";
 
 const configPath =
     process.platform === "win32"
         ? path.join(process.env.LOCALAPPDATA ?? "", "bili-welcome")
         : process.env.XDG_CONFIG_HOME
-        ? path.join(process.env.XDG_CONFIG_HOME, "bili-welcome")
-        : path.join(process.env.HOME ?? "", ".config", "bili-welcome");
+          ? path.join(process.env.XDG_CONFIG_HOME, "bili-welcome")
+          : path.join(process.env.HOME ?? "", ".config", "bili-welcome");
 
 const fileExists = (path: string): boolean => {
     if (existsSync(path)) {

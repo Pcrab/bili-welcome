@@ -1,6 +1,6 @@
-import { medal_name } from "./room.js";
-import config from "./config/index.js";
 import { consola } from "consola";
+import config from "./config/index.js";
+import { medal_name } from "./room.js";
 
 interface Medal {
     medal_name: string;
@@ -19,11 +19,14 @@ const getMedals = async (
     };
 }> => {
     const result = (await (
-        await fetch(`https://api.live.bilibili.com/xlive/app-ucenter/v1/user/GetMyMedals?page_size=10&page=${page}`, {
-            headers: {
-                cookie: `SESSDATA=${config.sess}; bili_jct=${config.csrf}`,
+        await fetch(
+            `https://api.live.bilibili.com/xlive/app-ucenter/v1/user/GetMyMedals?page_size=10&page=${page}`,
+            {
+                headers: {
+                    cookie: `SESSDATA=${config.sess}; bili_jct=${config.csrf}`,
+                },
             },
-        })
+        )
     ).json()) as {
         code: number;
         data: {
@@ -41,14 +44,17 @@ const changeMedal = async (medal_id: number): Promise<void> => {
     formData.append("csrf_token", config.csrf);
     formData.append("csrf", config.csrf);
     formData.append("medal_id", medal_id.toString());
-    const result = await fetch("https://api.live.bilibili.com/xlive/web-room/v1/fansMedal/wear", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-            cookie: `SESSDATA=${config.sess}`,
+    const result = await fetch(
+        "https://api.live.bilibili.com/xlive/web-room/v1/fansMedal/wear",
+        {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                cookie: `SESSDATA=${config.sess}`,
+            },
+            body: formData,
         },
-        body: formData,
-    });
+    );
     const data = (await result.json()) as {
         code: number;
         data: unknown;

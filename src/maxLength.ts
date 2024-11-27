@@ -14,12 +14,15 @@ interface Response {
 
 if (config.response) {
     const result = (await (
-        await fetch(`https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByUser?room_id=`, {
-            headers: {
-                // cookie
-                cookie: `bili_jct=${config.csrf}; SESSDATA=${config.sess}`,
+        await fetch(
+            "https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByUser?room_id=",
+            {
+                headers: {
+                    // cookie
+                    cookie: `bili_jct=${config.csrf}; SESSDATA=${config.sess}`,
+                },
             },
-        })
+        )
     ).json()) as Response;
     if (result.code === 0) {
         const type = result.data.privilege.privilege_type;

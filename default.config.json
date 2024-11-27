@@ -6,10 +6,13 @@
     "sendGap": 2000,
     "autoWearMedal": true,
     "response": {
-        "enter": true,
-        "fans": true,
-        "follow": true,
-        "gift": true
+        "enter": false,
+        "fans": false,
+        "follow": false,
+        "gift": false
     },
-    "giftMergeTime": 3000
+    "giftMergeTime": 3000,
+    "roomId": 0,
+    "uid": 0,
+    "logRaw": false
 }

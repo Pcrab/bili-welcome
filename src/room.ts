@@ -10,7 +10,9 @@ interface RoomInfoResponse {
 }
 
 const roomInfo = (await (
-    await fetch(`https://api.live.bilibili.com/room/v1/Room/get_info?room_id=${config.roomId}`)
+    await fetch(
+        `https://api.live.bilibili.com/room/v1/Room/get_info?room_id=${config.roomId}`,
+    )
 ).json()) as RoomInfoResponse;
 
 if (roomInfo.code === 1) {
@@ -31,7 +33,9 @@ interface LiveUserInfoResponse {
 }
 
 const liveUserInfo = (await (
-    await fetch(`https://api.live.bilibili.com/live_user/v1/Master/info?uid=${uid}`)
+    await fetch(
+        `https://api.live.bilibili.com/live_user/v1/Master/info?uid=${uid}`,
+    )
 ).json()) as LiveUserInfoResponse;
 
 if (liveUserInfo.code === 1) {

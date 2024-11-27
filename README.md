@@ -27,6 +27,7 @@ bwel
 | --no-blockBot | -B | 关闭屏蔽机器人用户 | 默认启用屏蔽机器人用户 |
 | --no-response | -R | 关闭自动回复 | 默认启用自动回复 |
 | --roomId | | 直播间号 | 必须为整数 |
+| --log | | 是否记录 log | 必须为字符串，指定 log 文件的位置 |
 
 ```bash
 bwel -c "./config/config.json" -d -R --csrf 1234 --sess 5678 --roomId 4321
@@ -95,6 +96,14 @@ interface ConfigOptions {
 ### roomId
 
 设置监听的直播间号。
+
+### logRaw
+
+设置是否记录每一条接收到的消息，用于 debug 或记录。
+
+可以为 boolean 或 字符串。为 false 或不填写时不会记录，若为 true 则会将 log 记录则默认配置同目录下的 `log.txt` 文件中。
+
+如果为字符串，则会将 log 记录在该字符串指定的文件位置。
 
 ### sendGap
 

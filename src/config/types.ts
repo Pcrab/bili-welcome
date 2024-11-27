@@ -13,6 +13,8 @@ interface ConfigOptions {
     };
     giftMergeTime: number;
     roomId: number;
+    uid: number;
+    logRaw: boolean | string;
 }
 
 type FinalOptions = Omit<Required<ConfigOptions>, "blockBot" | "response"> & {
@@ -32,6 +34,7 @@ interface Options {
     sess?: string;
     csrf?: string;
     roomId?: string;
+    log?: string;
 }
 
 export type { Options, ConfigOptions, FinalOptions };

@@ -1,9 +1,6 @@
-import merge from "ts-deepmerge";
-import defaultConfig from "../../default.config.json";
-import type { ConfigOptions, FinalOptions } from "./types.js";
-import opts from "./opts.js";
-import { loginWithQrcode } from "./login.js";
 import { consola } from "consola";
+import { merge } from "ts-deepmerge";
+import defaultConfig from "../../default.config.json" with { type: "json" };
 import {
     defaultBlockBot,
     defaultEnterResponse,
@@ -11,6 +8,9 @@ import {
     defaultFollowResponse,
     defaultGiftResponse,
 } from "./constants.js";
+import { loginWithQrcode } from "./login.js";
+import opts from "./opts.js";
+import type { ConfigOptions, FinalOptions } from "./types.js";
 
 const parseResponse = (
     base: Partial<ConfigOptions["response"]> | boolean,
@@ -32,7 +32,10 @@ const parseResponse = (
     return response;
 };
 
-const parseBlockBot = (base: boolean, blockBot: boolean | string): RegExp | null => {
+const parseBlockBot = (
+    base: boolean,
+    blockBot: boolean | string,
+): RegExp | null => {
     if (!base) {
         return null;
     }
@@ -45,13 +48,15 @@ const parseBlockBot = (base: boolean, blockBot: boolean | string): RegExp | null
     return null;
 };
 
-const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOptions | null): Promise<FinalOptions> => {
+const mergeConfig = async (
+    baseConfig: ConfigOptions,
+    specifiedConfig: ConfigOptions | null,
+): Promise<FinalOptions> => {
     const mergedConfig = ((): ConfigOptions => {
         if (specifiedConfig) {
             return merge(defaultConfig, baseConfig, specifiedConfig);
-        } else {
-            return merge(defaultConfig, baseConfig);
         }
+        return merge(defaultConfig, baseConfig);
     })();
     // default to enable blockBot
     const blockBot = parseBlockBot(opts.blockBot, mergedConfig.blockBot);
@@ -59,12 +64,21 @@ const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOpt
     const maxRetry = mergedConfig.maxRetry;
     const sendGap = mergedConfig.sendGap;
     const autoWearMedal = mergedConfig.autoWearMedal;
-    mergedConfig.roomId = parseInt(opts.roomId ?? "", 10) || mergedConfig.roomId;
+    mergedConfig.roomId =
+        Number.parseInt(opts.roomId ?? "", 10) || mergedConfig.roomId;
 
     const response = opts.response && mergedConfig.response;
-    const responseEnter = parseResponse(response, "enter", defaultEnterResponse);
+    const responseEnter = parseResponse(
+        response,
+        "enter",
+        defaultEnterResponse,
+    );
     const responseFans = parseResponse(response, "fans", defaultFansResponse);
-    const responseFollow = parseResponse(response, "follow", defaultFollowResponse);
+    const responseFollow = parseResponse(
+        response,
+        "follow",
+        defaultFollowResponse,
+    );
     const responseGift = parseResponse(response, "gift", defaultGiftResponse);
 
     if (!mergedConfig.sess || !mergedConfig.csrf) {
@@ -93,11 +107,17 @@ const mergeConfig = async (baseConfig: ConfigOptions, specifiedConfig: ConfigOpt
         sendGap,
         autoWearMedal,
         roomId,
-        response: (responseEnter || responseFans || responseFollow || responseGift) !== "",
+        response:
+            (responseEnter ||
+                responseFans ||
+                responseFollow ||
+                responseGift) !== "",
         responseEnter,
         responseFans,
         responseFollow,
         responseGift,
+        uid: mergedConfig.uid,
+        logRaw: opts.log ?? mergedConfig.logRaw,
     };
 };
 

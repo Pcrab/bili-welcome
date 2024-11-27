@@ -1,9 +1,11 @@
-import qrcode from "qrcode-terminal";
 import { consola } from "consola";
+import qrcode from "qrcode-terminal";
 
-const sleep = async (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = async (ms: number): Promise<void> =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
-const generateQrCodeUrl = "https://passport.bilibili.com/x/passport-login/web/qrcode/generate";
+const generateQrCodeUrl =
+    "https://passport.bilibili.com/x/passport-login/web/qrcode/generate";
 interface GenerateQrcodeResponse {
     data: {
         url: string;
@@ -11,12 +13,15 @@ interface GenerateQrcodeResponse {
     };
 }
 const generateQrCode = async (): Promise<string> => {
-    const response = (await (await fetch(generateQrCodeUrl, {})).json()) as GenerateQrcodeResponse;
+    const response = (await (
+        await fetch(generateQrCodeUrl, {})
+    ).json()) as GenerateQrcodeResponse;
     qrcode.generate(response.data.url, { small: true });
     return response.data.qrcode_key;
 };
 
-const pollQrcodeUrl = "https://passport.bilibili.com/x/passport-login/web/qrcode/poll";
+const pollQrcodeUrl =
+    "https://passport.bilibili.com/x/passport-login/web/qrcode/poll";
 
 interface PollQrcodeResponse {
     data: {
@@ -28,14 +33,21 @@ interface PollQrcodeResponse {
     };
 }
 
-const pollQrcode = async (qrcodeKey: string): Promise<[number, { sess: string; csrf: string }]> => {
-    const response = (await (await fetch(`${pollQrcodeUrl}?qrcode_key=${qrcodeKey}`)).json()) as PollQrcodeResponse;
+const pollQrcode = async (
+    qrcodeKey: string,
+): Promise<[number, { sess: string; csrf: string }]> => {
+    const res = await fetch(`${pollQrcodeUrl}?qrcode_key=${qrcodeKey}`);
+    console.log(res);
+    const response = (await res.json()) as PollQrcodeResponse;
     // login not success
-    if (response.data.code !== 0) return [response.data.code, { sess: "", csrf: "" }];
+    if (response.data.code !== 0)
+        return [response.data.code, { sess: "", csrf: "" }];
 
     // login success, write SESSDATA and bili_jct
     const url = new URL(response.data.url);
     const result = Object.fromEntries(url.searchParams);
+    console.log("login result:");
+    console.log(JSON.stringify(result));
     return [
         0,
         {

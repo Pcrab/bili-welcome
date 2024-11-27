@@ -1,5 +1,5 @@
-import { sendMsg } from "./send.js";
 import config from "./config/index.js";
+import { sendMsg } from "./send.js";
 
 const { giftMergeTime } = config;
 
@@ -18,7 +18,14 @@ const parseMsg = (msg: string, count: number, giftName: string): string => {
     return msg.replaceAll("%c", count.toString()).replaceAll("%g", giftName);
 };
 
-const handleGift = (id: string, uid: number, uname: string, count: number, giftName: string, msg: string): void => {
+const handleGift = (
+    id: string,
+    uid: number,
+    uname: string,
+    count: number,
+    giftName: string,
+    msg: string,
+): void => {
     let gift = map[uid]?.[giftName];
     if (!gift) {
         gift = {

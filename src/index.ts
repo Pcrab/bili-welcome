@@ -1,16 +1,57 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { type MsgHandler, startListen } from "blive-message-listener";
 import { consola } from "consola";
-import { startListen, type MsgHandler } from "blive-message-listener";
 import config from "./config/index.js";
-import { sendMsg } from "./send.js";
-import { medal_name } from "./room.js";
 import handleGift from "./gift.js";
+import { medal_name } from "./room.js";
+import { sendMsg } from "./send.js";
 import { updateMedal } from "./updateMedal.js";
+import { configPath } from "./utils.js";
 
 await updateMedal();
+
+const {
+    data: { buvid },
+} = (await (
+    await fetch("https://api.bilibili.com/x/web-frontend/getbuvid")
+).json()) as {
+    data: {
+        buvid: string;
+    };
+};
+
+consola.info("buvid: ", buvid);
+
+const {
+    data: { token },
+} = (await (
+    await fetch(
+        `https://api.live.bilibili.com/xlive/web-room/v1/index/getDanmuInfo?id=${config.roomId}&type=0`,
+        {
+            headers: {
+                cookie: `bili_jct=${config.csrf}; SESSDATA=${config.sess}; buvid3=${buvid}`,
+            },
+        },
+    )
+).json()) as {
+    data: {
+        token: string;
+    };
+};
+
+consola.info("token: ", token);
 
 const handler: MsgHandler = {
     onError: (err) => {
         consola.error(err);
+    },
+    onOpen: () => {
+        consola.info(`开始监听直播间 ${config.roomId}...`);
+    },
+    onClose: () => {
+        consola.info("close");
     },
     onUserAction: (msg) => {
         try {
@@ -43,7 +84,9 @@ const handler: MsgHandler = {
                     config.responseFans,
                 );
             } else {
-                consola.log(`用户「${msg.body.user.uname}」赠送了 ${msg.body.amount} 个 ${msg.body.gift_name}`);
+                consola.log(
+                    `用户「${msg.body.user.uname}」赠送了 ${msg.body.amount} 个 ${msg.body.gift_name}`,
+                );
                 handleGift(
                     msg.id,
                     msg.body.user.uid,
@@ -57,7 +100,28 @@ const handler: MsgHandler = {
             return;
         }
     },
+    raw: {
+        msg: (msg) => {
+            if (config.logRaw) {
+                fs.appendFileSync(
+                    typeof config.logRaw === "string"
+                        ? config.logRaw
+                        : path.join(configPath, "log.txt"),
+                    JSON.stringify(msg) + os.EOL,
+                );
+            }
+        },
+    },
 };
 
-startListen(config.roomId, handler);
-consola.info(`开始监听直播间 ${config.roomId}...`);
+startListen(config.roomId, handler, {
+    ws: {
+        platform: "web",
+        host: "broadcastlv.chat.bilibili.com",
+        protover: 3,
+        type: 2,
+        uid: config.uid,
+        key: token,
+        buvid,
+    },
+});
